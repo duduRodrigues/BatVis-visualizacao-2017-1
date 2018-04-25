@@ -24,26 +24,17 @@ void 0!==c?e&&"set"in e&&void 0!==(d=e.set(a,c,b))?d:a[b]=c:e&&"get"in e&&null!=
 })(jQuery);
 
 function list_files(dir) {
-	// $.ajax({
-	// 	type: "GET",
-	// 	async: false,
-	// 	url: dir,
-	// 	success: function(html) {
-	// 		$(html).find("li > a").each(function() {
-	// 			files.push(dir + $(this).attr("href"));
-	// 		});
-	// 	}
-	// });
-
 	files = [];
-	
-	var xhr = new XMLHttpRequest();
-	xhr.open('GET', dir, false);
-	xhr.setRequestHeader("Accept", "");
-	xhr.send();	$(xhr.response).find("li > a").each(function() {
-		files.push(dir + $(this).attr("href"));
+	$.ajax({
+		type: "GET",
+		async: false,
+		url: dir,
+		success: function(html) {
+			$(html).find("li > a").each(function() {
+				files.push(dir + $(this).attr("href"));
+			});
+		}
 	});
-
 	return files;
 }
 
