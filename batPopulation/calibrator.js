@@ -30,7 +30,7 @@ class Calibrator {
 
 	setBackground(file) {
 		this.svg
-			.style("background", "url(\"images/" + file + "_img.png\") 0 0")
+			.style("background", "url(\"" + file + "\") 0 0")
 			.style("background-size", this.width + "px " + this.height + "px");
 	}
 

@@ -45,6 +45,7 @@ class PopulationGraph {
 		this.batData, this.fps, this.startTime;
 
 		this.enteringExitingBatDataSize = 60;
+		this.csvEnteringExitingBatDataSize;
 
 		this.firstFrame = [];
 		this.lastFrame = [];
@@ -90,7 +91,7 @@ class PopulationGraph {
 				"h": parseInt(this.batData.start.substring(0, 2)),
 				"m": parseInt(this.batData.start.substring(3, 5)),
 				"s": parseInt(this.batData.start.substring(6, 8))
-			}
+			};
 
 			this.firstFrame[0] = [0];                                                                                    this.firstFrame[1] = this.firstFrame[0];
 			this.lastFrame[0] = this.batData.total;                                                                      this.lastFrame[1] = this.lastFrame[0];
@@ -100,6 +101,8 @@ class PopulationGraph {
 			this.exitingBatData[0] = [];                                                                                 this.exitingBatData[1] = this.exitingBatData[0];
 			this.neutralBatData[0] = [];                                                                                 this.neutralBatData[1] = this.neutralBatData[0];
 			this.populationBatData[0] = [];                                                                              this.populationBatData[1] = this.populationBatData[0];
+
+			this.csvEnteringExitingBatDataSize = Math.ceil(this.batData.total / (60 * this.batData.fps)) + 1;
 
 			this.setEnteringAndExitingBatData(1);
 			this.drawGraph();
@@ -126,6 +129,8 @@ class PopulationGraph {
 
 		this.setEnteringAndExitingBatData(1);
 		this.drawGraph();
+
+		this.csvEnteringExitingBatDataSize = Math.ceil((this.lastFrame[1] - this.firstFrame[1]) / (60 * this.batData.fps)) + 1;
 
 		if (!this.firstCalibrationDone) { return; }
 
@@ -438,7 +443,7 @@ class PopulationGraph {
 		this.setMiniAxisDomain();
 
 		this.miniXAxis
-	        .tickValues(this.miniXScale.ticks(10).filter(function(d) { return Number.isInteger(d); }))
+	        .tickValues(this.miniXScale.ticks(11).filter(function(d) { return Number.isInteger(d); }))
 	        .tickFormat(function(d) { return this.convertFrameToHHMMSS(d); }.bind(this));
 		this.miniXAxisLine
 			.transition()
@@ -750,10 +755,14 @@ class PopulationGraph {
 					"lastFrame":               this.lastFrame[1],
 					"fps":                     this.fps,
 					"startTime":               this.startTime,
-					"batListSegmentationSize": this.enteringExitingBatDataSize,
-					"enteringBats":            this.enteringBatData[1].map(function(d)   { return d.bats.length; }),
-					"exitingBats":             this.exitingBatData[1].map(function(d)    { return d.bats.length; }),
-					"populationBats":          this.populationBatData[1].map(function(d) { return d.population; })
+					// "batListSegmentationSize": this.enteringExitingBatDataSize,
+					"batListSegmentationSize": this.csvEnteringExitingBatDataSize,
+					// "enteringBats":            this.enteringBatData[1].map(function(d)   { return d.bats.length; }),
+					// "exitingBats":             this.exitingBatData[1].map(function(d)    { return d.bats.length; }),
+					// "populationBats":          this.populationBatData[1].map(function(d) { return d.population; })
+					"enteringBats":            this.enteringBatData[1],
+					"exitingBats":             this.exitingBatData[1],
+					"populationBats":          this.populationBatData[1]
 				},
 				"sendToBatViewer": {
 					"firstFrame": this.firstFrame[1],
